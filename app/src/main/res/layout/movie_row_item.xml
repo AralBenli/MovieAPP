@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/movie_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/black">
+
+
+    <ImageView
+        android:id="@+id/movieImageView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="H,3:2" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/movie_title"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/movieImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        android:foregroundGravity="center"/>
+
+    <TextView
+        android:id="@+id/releaseDateTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/release_data"
+        android:textColor="@android:color/holo_orange_light"
+        android:textSize="8sp"
+        app:layout_constraintStart_toStartOf="@id/titleTextView"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+         />
+
+    <RatingBar
+        android:id="@+id/listRating"
+        style="@android:style/Widget.Holo.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:numStars="5"
+        android:outlineAmbientShadowColor="@color/white"
+        android:progressBackgroundTint="#605F5D"
+        android:progressTint="#FFFF00"
+        android:stepSize="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/releaseDateTextView"/>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
