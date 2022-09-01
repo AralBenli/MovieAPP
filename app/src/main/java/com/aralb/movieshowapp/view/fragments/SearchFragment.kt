@@ -1,37 +1,37 @@
 package com.aralb.movieshowapp.view.fragments
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.SearchAdapter
 import com.aralb.movieshowapp.response.MovieResponse
-import com.aralb.movieshowapp.api.AppModule
-import com.aralb.movieshowapp.util.Constants
+import com.aralb.movieshowapp.view.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SearchFragment : Fragment() {
     lateinit var searchAdapter: SearchAdapter
     lateinit var linearlayoutmanager: LinearLayoutManager
     lateinit var text: String
+    lateinit var searchViewModel: SearchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
+        searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,43 +44,29 @@ class SearchFragment : Fragment() {
         view.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(query: String?): Boolean {
-
                 return false
             }
+
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     text = query
-
-                    getSearch()
+                    searchViewModel.getSearch(text)
                     return true
                 }
                 return false
-            } }) }
-
-    fun getSearch() {
-        val retrofit = AppModule.retrofitService.getSearch(Constants.api_key,text)
-        retrofit.enqueue(object : Callback<MovieResponse?> {
-            override fun onResponse(
-                call: Call<MovieResponse?>,
-                response: Response<MovieResponse?>
-            ) {
-
-        val responseBody = response.body()!!
-
-                searchAdapter = SearchAdapter(
-            requireContext(),
-            responseBody.movies,
-            findNavController()
-        )
-
-        searchRecyclerView.adapter = searchAdapter
             }
+        })
+        val searchObserver = Observer<MovieResponse> { data ->
+            searchAdapter = SearchAdapter(
+                requireContext(),
+                data.movies,
+                findNavController()
+            )
+            searchRecyclerView.adapter = searchAdapter
+        }
+        searchViewModel.searchModel.observe(requireActivity(), searchObserver)
+    } }
 
-            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-                Log.d("MainActivity", "onFailure: " + t.message)
-            } })
-    }
-}
 
 
 

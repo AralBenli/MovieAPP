@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdk 32
@@ -25,8 +26,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        dataBinding true
+    }
+
+    kapt {
+        useBuildCache = false
     }
 
     buildFeatures {
@@ -66,4 +76,9 @@ dependencies {
 
     // live data
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+
+    // data binding
+    kapt "com.android.databinding:compiler:3.1.4"
+
+
 }

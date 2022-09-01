@@ -1,7 +1,6 @@
 package com.aralb.movieshowapp.adapters
 
 import android.content.Context
-import android.media.Rating
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.models.movieData.MovieResultItem
 import com.aralb.movieshowapp.util.Constants.imageBase
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.fragment_list.view.*
 import kotlinx.android.synthetic.main.movie_row_item.view.*
 
 class ListAdapter(private val context: Context, private val movies: List<MovieResultItem>?, private val navController: NavController)
@@ -48,13 +46,14 @@ class ListAdapter(private val context: Context, private val movies: List<MovieRe
 
         val movieId = movies!![position]
 
-        holder.title.text=movieId.title
-        holder.release_date.text=movieId.release_date
-        holder.vote_average.rating = (movieId.vote_average.toFloat())/2
 
-        Picasso.get()
-            .load(imageBase + movieId.poster_path)
-            .into(holder.poster_path)
+            holder.title.text=movieId.title
+            holder.release_date.text=movieId.release_date
+            holder.vote_average.rating = (movieId.vote_average.toFloat())/2
+
+            Picasso.get()
+                .load(imageBase + movieId.poster_path)
+                .into(holder.poster_path)
 
 
         val bundle = Bundle()

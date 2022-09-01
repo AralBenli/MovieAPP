@@ -32,8 +32,6 @@ class SimilarMovieAdapter (private val context: Context,
             poster_path = itemView.similarMovieImageView
             title = itemView.similarMovieTitle
             vote_average= itemView.similarRating
-
-
         }
     }
 
@@ -55,7 +53,6 @@ class SimilarMovieAdapter (private val context: Context,
             .load(Constants.imageBase + movie.poster_path)
             .into(holder.poster_path)
 
-
         holder.itemView.similar_root.setOnClickListener {
 
             recyclerViewClickInterface.onItemClicked(movie.id.toInt())
@@ -68,7 +65,7 @@ class SimilarMovieAdapter (private val context: Context,
         return similarMovie.size
     }
 
-    }
+}
 
 
 
