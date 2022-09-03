@@ -17,8 +17,11 @@ import com.aralb.movieshowapp.util.Constants.imageBase
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_row_item.view.*
 
-class ListAdapter(private val context: Context, private val movies: List<MovieResultItem>?, private val navController: NavController)
-    :RecyclerView.Adapter<ListAdapter.MovieViewHolder>(){
+class MovieAdapter(private val context: Context,
+                   private val movies: List<MovieResultItem>?,
+                   private val navController: NavController)
+    :RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
+
     class MovieViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
 
         var poster_path : ImageView
@@ -26,15 +29,13 @@ class ListAdapter(private val context: Context, private val movies: List<MovieRe
         var release_date : TextView
         var vote_average : RatingBar
         private val movie_root: ConstraintLayout
-
         init {
             poster_path = itemView.movieImageView
             title = itemView.titleTextView
             release_date = itemView.releaseDateTextView
-            vote_average = itemView.listRating
+            vote_average = itemView.latestVoteAverage
             movie_root = itemView.movie_root
-        }
-    }
+        } }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
 
@@ -46,12 +47,11 @@ class ListAdapter(private val context: Context, private val movies: List<MovieRe
 
         val movieId = movies!![position]
 
-
-            holder.title.text=movieId.title
-            holder.release_date.text=movieId.release_date
+            holder.title.text= movieId.title
+            holder.release_date.text = movieId.release_date
             holder.vote_average.rating = (movieId.vote_average.toFloat())/2
 
-            Picasso.get()
+        Picasso.get()
                 .load(imageBase + movieId.poster_path)
                 .into(holder.poster_path)
 
@@ -60,8 +60,10 @@ class ListAdapter(private val context: Context, private val movies: List<MovieRe
         bundle.putParcelable("movie", movieId )
 
         holder.itemView.movie_root.setOnClickListener {
-            navController.navigate(R.id.action_ListFragment_to_detailsFragment , bundle)
+            navController.navigate(R.id.action_MainFragment_to_detailsFragment , bundle)
         }
+
+
     }
     override fun getItemCount(): Int {
         return movies!!.size

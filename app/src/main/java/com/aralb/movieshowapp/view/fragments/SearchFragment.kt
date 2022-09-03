@@ -28,6 +28,7 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search, container, false)
         searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
@@ -42,11 +43,9 @@ class SearchFragment : Fragment() {
         searchRecyclerView.setHasFixedSize(true)
 
         view.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
             override fun onQueryTextChange(query: String?): Boolean {
                 return false
             }
-
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     text = query
@@ -54,8 +53,9 @@ class SearchFragment : Fragment() {
                     return true
                 }
                 return false
-            }
-        })
+            } })
+
+        //SEARCH MOVIE
         val searchObserver = Observer<MovieResponse> { data ->
             searchAdapter = SearchAdapter(
                 requireContext(),

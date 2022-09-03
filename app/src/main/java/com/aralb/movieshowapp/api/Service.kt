@@ -5,10 +5,10 @@ import com.aralb.movieshowapp.util.Constants
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object AppModule {
 
-private fun retrofit() : Retrofit {
+object Service {
 
+private fun retrofit() :Retrofit {
 
     return Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())

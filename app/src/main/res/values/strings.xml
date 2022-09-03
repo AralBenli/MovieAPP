@@ -15,4 +15,6 @@
     <string name="movie_original_name">Movie Original Name :</string>
     <string name="similar_type_movies">Similar Type Movies</string>
     <string name="movies">Movies</string>
+    <string name="upcoming_movies">Upcoming Movies</string>
+    <string name="popular_movies">Popular Movies</string>
 </resources>

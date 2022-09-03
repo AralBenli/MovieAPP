@@ -17,7 +17,6 @@ import com.aralb.movieshowapp.models.movieDetail.MovieDetail
 import com.aralb.movieshowapp.response.MovieResponse
 import com.aralb.movieshowapp.util.Constants.imageBase
 import com.aralb.movieshowapp.view.viewModels.DetailViewModel
-import com.aralb.movieshowapp.view.viewModels.SimilarMoviesViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -27,9 +26,10 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
     private lateinit var movie : MovieResultItem
     private lateinit var view : View
     private lateinit var similarMovieAdapter: SimilarMovieAdapter
+
     private lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var viewModelDetail : DetailViewModel
-    lateinit var viewModelSimilar : SimilarMoviesViewModel
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +39,7 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
         view = inflater.inflate(R.layout.fragment_detail, container, false)
 
         viewModelDetail = ViewModelProvider(this)[DetailViewModel::class.java]
-        viewModelSimilar = ViewModelProvider(this)[SimilarMoviesViewModel::class.java]
+
 
         return view
 
@@ -52,6 +52,8 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        // MOVIE DETAILS
         linearLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL , false)
         similarMovieRecyclerView.layoutManager= linearLayoutManager
         similarMovieRecyclerView.setHasFixedSize(true)
@@ -65,9 +67,12 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
         viewModelDetail.detailModel.observe(requireActivity(),detailObserver)
 
 
-        viewModelSimilar.getSimilar(movie.id.toInt())
+        //SIMILAR MOVIES
+
+        viewModelDetail.getSimilar(movie.id.toInt())
 
         val similarObserver = Observer<MovieResponse>{ data ->
+
             similarMovieAdapter = SimilarMovieAdapter(
                     requireContext(),
                     data.movies,
@@ -76,11 +81,12 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
             similarMovieRecyclerView.adapter = similarMovieAdapter
         }
 
-        viewModelSimilar.similarModel.observe(requireActivity(),similarObserver)
+        viewModelDetail.similarModel.observe(requireActivity(),similarObserver)
     }
 
-    override fun onItemClicked(id :Int) {
-        viewModelDetail.getDetails(id) }
+    override fun onItemClicked(id :Int){
+        viewModelDetail.getDetails(id)
+        detailScrollView.smoothScrollTo(0,0)}
 
     private fun viewBind(data: MovieDetail){
 
@@ -96,10 +102,8 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
     view.detailPopularity.text = data.popularity.toString()
     view.detailRatingbar.rating=(data.vote_average.toFloat())/2
 
-    viewModelSimilar.getSimilar(movie.id.toInt())
-
-}
-
+    viewModelDetail.getSimilar(movie.id.toInt())
+    }
 }
 
 

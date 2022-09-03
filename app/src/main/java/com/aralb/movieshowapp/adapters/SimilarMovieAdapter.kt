@@ -37,7 +37,8 @@ class SimilarMovieAdapter (private val context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimilarViewHolder {
 
-        val itemView = LayoutInflater.from(context).inflate(R.layout.similar_movie_rec_row_item,parent,false)
+        val itemView = LayoutInflater.from(context)
+            .inflate(R.layout.similar_movie_rec_row_item,parent,false)
         return SimilarViewHolder(itemView)
     }
 
@@ -52,6 +53,7 @@ class SimilarMovieAdapter (private val context: Context,
        Picasso.get()
             .load(Constants.imageBase + movie.poster_path)
             .into(holder.poster_path)
+
 
         holder.itemView.similar_root.setOnClickListener {
 

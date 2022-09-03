@@ -3,27 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/my_nav"
-    app:startDestination="@id/ListFragment">
+    app:startDestination="@id/MainFragment">
     <fragment
-        android:id="@+id/ListFragment"
-        android:name="com.aralb.movieshowapp.view.fragments.ListFragment"
+        android:id="@+id/MainFragment"
+        android:name="com.aralb.movieshowapp.view.fragments.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_list">
+        tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/action_ListFragment_to_detailsFragment"
+            android:id="@+id/action_MainFragment_to_detailsFragment"
             app:destination="@id/detailsFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/from_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/from_right"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_ListFragment_to_searchFragment"
+            android:id="@+id/action_MainFragment_to_searchFragment"
             app:destination="@id/searchFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -39,10 +31,6 @@
         <action
             android:id="@+id/action_searchFragment_to_detailsFragment"
             app:destination="@id/detailsFragment"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/from_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/from_right"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>

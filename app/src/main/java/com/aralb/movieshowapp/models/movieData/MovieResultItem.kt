@@ -4,8 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 
-
-
 @Parcelize
 data class MovieResultItem(
     val id: String,
