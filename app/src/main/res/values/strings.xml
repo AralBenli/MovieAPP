@@ -17,4 +17,6 @@
     <string name="movies">Movies</string>
     <string name="upcoming_movies">Upcoming Movies</string>
     <string name="popular_movies">Popular Movies</string>
+    <string name="top_rated_movies">Top Rated Movies</string>
+    <string name="movie_rating">Movie Rating :</string>
 </resources>

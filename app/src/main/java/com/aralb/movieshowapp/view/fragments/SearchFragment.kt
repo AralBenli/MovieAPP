@@ -7,22 +7,30 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aralb.movieshowapp.R
-import com.aralb.movieshowapp.adapters.SearchAdapter
+import com.aralb.movieshowapp.RecyclerViewClickInterface
+import com.aralb.movieshowapp.adapters.MovieAdapter
+import com.aralb.movieshowapp.models.movieData.MovieResultItem
 import com.aralb.movieshowapp.response.MovieResponse
 import com.aralb.movieshowapp.view.viewModels.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 
 
-class SearchFragment : Fragment() {
-    lateinit var searchAdapter: SearchAdapter
+class SearchFragment : Fragment() ,RecyclerViewClickInterface {
+    lateinit var searchAdapter: MovieAdapter
     lateinit var linearlayoutmanager: LinearLayoutManager
     lateinit var text: String
     lateinit var searchViewModel: SearchViewModel
+    lateinit var viewModelDetail : ViewModel
+    lateinit var movie : MovieResultItem
+
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,15 +65,26 @@ class SearchFragment : Fragment() {
 
         //SEARCH MOVIE
         val searchObserver = Observer<MovieResponse> { data ->
-            searchAdapter = SearchAdapter(
+            searchAdapter = MovieAdapter(
                 requireContext(),
                 data.movies,
-                findNavController()
+                this
+
             )
             searchRecyclerView.adapter = searchAdapter
         }
         searchViewModel.searchModel.observe(requireActivity(), searchObserver)
-    } }
+
+    }
+
+    override fun onItemClicked(movie: MovieResultItem) {
+           val bundle = Bundle()
+           bundle.putParcelable("movie",movie)
+
+        findNavController().navigate(R.id.action_searchFragment_to_detailsFragment , bundle )
+    }
+
+}
 
 
 

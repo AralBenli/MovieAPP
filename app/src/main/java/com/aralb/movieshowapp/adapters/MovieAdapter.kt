@@ -1,7 +1,6 @@
 package com.aralb.movieshowapp.adapters
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,9 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
+import com.aralb.movieshowapp.RecyclerViewClickInterface
 import com.aralb.movieshowapp.models.movieData.MovieResultItem
 import com.aralb.movieshowapp.util.Constants.imageBase
 import com.squareup.picasso.Picasso
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.movie_row_item.view.*
 
 class MovieAdapter(private val context: Context,
                    private val movies: List<MovieResultItem>?,
-                   private val navController: NavController)
+                   private val recyclerViewClickInterface: RecyclerViewClickInterface)
     :RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
 
     class MovieViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
@@ -45,22 +44,22 @@ class MovieAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
 
-        val movieId = movies!![position]
+        val movie = movies!![position]
 
-            holder.title.text= movieId.title
-            holder.release_date.text = movieId.release_date
-            holder.vote_average.rating = (movieId.vote_average.toFloat())/2
+            holder.title.text= movie.title
+            holder.release_date.text = movie.release_date
+            holder.vote_average.rating = (movie.vote_average.toFloat())/2
 
         Picasso.get()
-                .load(imageBase + movieId.poster_path)
+                .load(imageBase + movie.poster_path)
                 .into(holder.poster_path)
 
 
-        val bundle = Bundle()
-        bundle.putParcelable("movie", movieId )
 
         holder.itemView.movie_root.setOnClickListener {
-            navController.navigate(R.id.action_MainFragment_to_detailsFragment , bundle)
+
+            recyclerViewClickInterface.onItemClicked(movie)
+
         }
 
 

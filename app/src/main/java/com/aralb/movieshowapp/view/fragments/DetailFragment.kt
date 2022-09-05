@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.RecyclerViewClickInterface
-import com.aralb.movieshowapp.adapters.SimilarMovieAdapter
+import com.aralb.movieshowapp.adapters.MovieAdapter
 import com.aralb.movieshowapp.models.movieData.MovieResultItem
 import com.aralb.movieshowapp.models.movieDetail.MovieDetail
 import com.aralb.movieshowapp.response.MovieResponse
@@ -25,8 +25,7 @@ import kotlinx.android.synthetic.main.fragment_detail.view.*
 class DetailFragment : Fragment() , RecyclerViewClickInterface{
     private lateinit var movie : MovieResultItem
     private lateinit var view : View
-    private lateinit var similarMovieAdapter: SimilarMovieAdapter
-
+    private lateinit var similarMovieAdapter: MovieAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var viewModelDetail : DetailViewModel
 
@@ -34,7 +33,7 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_detail, container, false)
 
@@ -53,12 +52,12 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
         super.onViewCreated(view, savedInstanceState)
 
 
-        // MOVIE DETAILS
         linearLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL , false)
         similarMovieRecyclerView.layoutManager= linearLayoutManager
         similarMovieRecyclerView.setHasFixedSize(true)
 
         movie = requireArguments().getParcelable("movie")!!
+        // MOVIE DETAILS
 
         viewModelDetail.getDetails(movie.id.toInt())
         val detailObserver = Observer<MovieDetail>{ data ->
@@ -73,7 +72,7 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
 
         val similarObserver = Observer<MovieResponse>{ data ->
 
-            similarMovieAdapter = SimilarMovieAdapter(
+            similarMovieAdapter = MovieAdapter(
                     requireContext(),
                     data.movies,
                     this@DetailFragment)
@@ -84,8 +83,10 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
         viewModelDetail.similarModel.observe(requireActivity(),similarObserver)
     }
 
-    override fun onItemClicked(id :Int){
-        viewModelDetail.getDetails(id)
+    override fun onItemClicked(movie : MovieResultItem){
+
+        viewModelDetail.getDetails(movie.id.toInt())
+
         detailScrollView.smoothScrollTo(0,0)}
 
     private fun viewBind(data: MovieDetail){

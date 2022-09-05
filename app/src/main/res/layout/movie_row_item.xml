@@ -9,16 +9,15 @@
     android:layout_height="wrap_content"
     android:background="@color/black">
 
-
     <ImageView
         android:id="@+id/movieImageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="H,3:2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
@@ -30,14 +29,13 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/movieImageView" />
-
     <TextView
         android:id="@+id/releaseDateTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/release_data"
         android:textColor="@android:color/holo_orange_light"
-        android:textSize="8sp"
+        android:textSize="11sp"
         app:layout_constraintStart_toStartOf="@id/titleTextView"
         app:layout_constraintTop_toBottomOf="@id/titleTextView" />
 
@@ -48,10 +46,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:numStars="5"
-        android:outlineAmbientShadowColor="@color/white"
         android:progressBackgroundTint="#605F5D"
         android:progressTint="#FFFF00"
         android:stepSize="0.5"
+        app:layout_constraintEnd_toEndOf="@+id/movieImageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/releaseDateTextView" />
 

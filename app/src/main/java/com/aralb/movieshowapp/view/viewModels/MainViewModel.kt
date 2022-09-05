@@ -30,7 +30,6 @@ class MainViewModel : ViewModel(){
                 call: Call<MovieResponse?>,
                 response: Response<MovieResponse?>
             ) {
-                println(response)
                 val responseBody = response.body()!!
                 popularMovieModel.value = responseBody
             }
@@ -50,7 +49,6 @@ class MainViewModel : ViewModel(){
                 call: Call<MovieResponse?>,
                 response: Response<MovieResponse?>
             ) {
-                println(response)
                 val responseBody = response.body()!!
                 upcomingMovieModel.value = responseBody
             }
