@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/upcoming_movies"
+        android:layout_marginEnd="20dp"
         android:foregroundGravity="center_vertical"
         android:src="@drawable/ic_search_"
         app:layout_constraintBottom_toBottomOf="@+id/toolbarTitle"

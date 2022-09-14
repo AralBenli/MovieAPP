@@ -1,17 +1,19 @@
 package com.aralb.movieshowapp.view.viewModels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aralb.movieshowapp.api.Service
+import com.aralb.movieshowapp.dataReceiverInterface.DetailDataListener
 import com.aralb.movieshowapp.models.movieDetail.MovieDetail
-import com.aralb.movieshowapp.response.MovieResponse
-import com.aralb.movieshowapp.util.Constants
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.aralb.movieshowapp.models.response.MovieResponse
+import com.aralb.movieshowapp.repository.DetailRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class DetailViewModel : ViewModel() {
+@HiltViewModel
+class DetailViewModel
+@Inject constructor(
+    private var  repository : DetailRepository,
+): ViewModel() , DetailDataListener {
 
     val detailModel = MutableLiveData<MovieDetail>()
     val detailLoadingError = MutableLiveData<String>()
@@ -19,46 +21,23 @@ class DetailViewModel : ViewModel() {
     val similarModel = MutableLiveData<MovieResponse>()
     val similarLoadingError = MutableLiveData<String>()
 
-    fun getDetails(id: Int) {
-        val retrofit = Service.retrofitService.getDetails(id, Constants.api_key)
-        retrofit.enqueue(object : Callback<MovieDetail?> {
+init {
+    repository.listenerDetail = this
+}
 
-            override fun onResponse(call: Call<MovieDetail?>, response: Response<MovieDetail?>) {
+    fun getDetails (id:Int){
+    repository.getDetails(id)
+}
+    fun getSimilar (id: Int) {
+    repository.getSimilar(id)
+}
 
-                val responseBody = response.body()!!
-
-                detailModel.value = responseBody
-            }
-
-            override fun onFailure(call: Call<MovieDetail?>, t: Throwable) {
-                Log.d("MainActivity", "onFailure: " + t.message)
-
-                detailLoadingError.value = t.message
-            }
-        })
-    }
-    fun getSimilar(id: Int) {
-
-        val retrofit = Service.retrofitService.getSimilar(id, Constants.api_key)
-        retrofit.enqueue(object : Callback<MovieResponse?> {
-            override fun onResponse(
-                call: Call<MovieResponse?>,
-                response: Response<MovieResponse?>
-            ) {
-                val responseBody = response.body()!!
-                similarModel.value = responseBody
-
-            }
-
-            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-                Log.d("MainActivity", "onFailure: " + t.message)
-                similarLoadingError.value = t.message
-            }
-        })
+    override fun onDetailDataReceived(data: MovieDetail) {
+    detailModel.value = data
     }
 
-
-
-
+    override fun onSimilarDataReceived(data: MovieResponse) {
+    similarModel.value = data
+    }
 }
 

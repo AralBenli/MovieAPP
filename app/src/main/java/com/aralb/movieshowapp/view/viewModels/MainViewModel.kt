@@ -1,16 +1,17 @@
 package com.aralb.movieshowapp.view.viewModels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aralb.movieshowapp.api.Service
-import com.aralb.movieshowapp.response.MovieResponse
-import com.aralb.movieshowapp.util.Constants
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.aralb.movieshowapp.dataReceiverInterface.MainDataListener
+import com.aralb.movieshowapp.models.response.MovieResponse
+import com.aralb.movieshowapp.repository.MainRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel : ViewModel(){
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val repository: MainRepository
+    ) :ViewModel() , MainDataListener {
 
     val popularMovieModel = MutableLiveData<MovieResponse>()
     val popularMovieLoadingError = MutableLiveData<String>()
@@ -21,59 +22,37 @@ class MainViewModel : ViewModel(){
     val topRatedMovieModel = MutableLiveData<MovieResponse>()
     val topRatedMovieLoadingError = MutableLiveData<String>()
 
-    fun getPopularMovieData(){
+    init {
 
-        val retrofit = Service.retrofitService.getMovieList(Constants.api_key)
+        repository.listenerMain = this
 
-        retrofit.enqueue(object : Callback<MovieResponse?> {
-            override fun onResponse(
-                call: Call<MovieResponse?>,
-                response: Response<MovieResponse?>
-            ) {
-                val responseBody = response.body()!!
-                popularMovieModel.value = responseBody
-            }
-            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-                Log.d("MainActivity", "onFailure: " + t.message)
+    }
 
-                popularMovieLoadingError.value = t.message
-            }
-        }) }
 
-    fun getUpcomingMovieData(){
-
-        val retrofit = Service.retrofitService.getUpcoming(Constants.api_key)
-
-        retrofit.enqueue(object : Callback<MovieResponse?> {
-            override fun onResponse(
-                call: Call<MovieResponse?>,
-                response: Response<MovieResponse?>
-            ) {
-                val responseBody = response.body()!!
-                upcomingMovieModel.value = responseBody
-            }
-            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-                Log.d("MainActivity", "onFailure: " + t.message)
-                upcomingMovieLoadingError.value = t.message
-            }
-        }) }
+    fun getPopular(){
+        repository.getPopular()
+    }
 
     fun getTopRated(){
-        val retrofit = Service.retrofitService.getTopRated(Constants.api_key)
-
-        retrofit.enqueue(object : Callback<MovieResponse?> {
-            override fun onResponse(
-                call: Call<MovieResponse?>,
-                response: Response<MovieResponse?>
-            ) {
-               val responseBody = response.body()!!
-               topRatedMovieModel.value = responseBody
-            }
-
-            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-                Log.d("MainActivity", "onFailure: " + t.message)
-                topRatedMovieLoadingError.value = t.message
-            }
-        })
+        repository.getTopRated()
     }
+
+    fun getUpcoming(){
+        repository.getUpcoming()
+    }
+
+
+    override fun onPopularDataReceived(data: MovieResponse) {
+        popularMovieModel.value = data
+    }
+
+    override fun onTopRatedDataReceived(data: MovieResponse) {
+    topRatedMovieModel.value = data
+    }
+
+    override fun onUpcomingDataReceived(data: MovieResponse) {
+        upcomingMovieModel.value = data
+    }
+
+
 }

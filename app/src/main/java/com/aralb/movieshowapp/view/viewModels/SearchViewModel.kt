@@ -1,38 +1,33 @@
 package com.aralb.movieshowapp.view.viewModels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.aralb.movieshowapp.api.Service
-import com.aralb.movieshowapp.response.MovieResponse
-import com.aralb.movieshowapp.util.Constants
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.aralb.movieshowapp.dataReceiverInterface.SearchDataListener
+import com.aralb.movieshowapp.models.response.MovieResponse
+import com.aralb.movieshowapp.repository.SearchRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SearchViewModel : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val repository: SearchRepository,
+) : ViewModel(), SearchDataListener {
 
     val searchModel = MutableLiveData<MovieResponse>()
     val searchLoadingError = MutableLiveData<String>()
 
-    fun getSearch(text:String){
-
-        val retrofit = Service.retrofitService.getSearch(Constants.api_key,text)
-        retrofit.enqueue(object : Callback<MovieResponse?> {
-
-            override fun onResponse(
-                call: Call<MovieResponse?>,
-                response: Response<MovieResponse?>
-            ) {
-                val responseBody = response.body()!!
-                searchModel.value = responseBody
-            }
-
-            override fun onFailure(call: Call<MovieResponse?>, t: Throwable) {
-
-                Log.d("MainActivity" ,"onFailure: t.message")
-                searchLoadingError.value = t.message
-            }
-        })
+    init {
+        repository.listenerSearch = this
     }
+
+    fun getSearch(text: String){
+        repository.getSearch(text)
+    }
+
+
+    override fun onSearchDataReceived(data: MovieResponse) {
+    searchModel.value = data
+    }
+
+
 }

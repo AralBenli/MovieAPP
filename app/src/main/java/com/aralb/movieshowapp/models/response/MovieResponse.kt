@@ -1,4 +1,4 @@
-package com.aralb.movieshowapp.response
+package com.aralb.movieshowapp.models.response
 
 import android.os.Parcelable
 import com.aralb.movieshowapp.models.movieData.Dates

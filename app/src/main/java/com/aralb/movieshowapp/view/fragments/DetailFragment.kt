@@ -10,25 +10,25 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
-import com.aralb.movieshowapp.RecyclerViewClickInterface
 import com.aralb.movieshowapp.adapters.MovieAdapter
+import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
 import com.aralb.movieshowapp.models.movieData.MovieResultItem
 import com.aralb.movieshowapp.models.movieDetail.MovieDetail
-import com.aralb.movieshowapp.response.MovieResponse
+import com.aralb.movieshowapp.models.response.MovieResponse
 import com.aralb.movieshowapp.util.Constants.imageBase
 import com.aralb.movieshowapp.view.viewModels.DetailViewModel
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
 
-
-class DetailFragment : Fragment() , RecyclerViewClickInterface{
+@AndroidEntryPoint
+class DetailFragment : Fragment() , RecyclerViewClickInterface {
     private lateinit var movie : MovieResultItem
     private lateinit var view : View
     private lateinit var similarMovieAdapter: MovieAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var viewModelDetail : DetailViewModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,12 +36,8 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
     ): View {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_detail, container, false)
-
         viewModelDetail = ViewModelProvider(this)[DetailViewModel::class.java]
-
-
         return view
-
     }
 
     override fun getView(): View? {
@@ -84,10 +80,9 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface{
     }
 
     override fun onItemClicked(movie : MovieResultItem){
-
         viewModelDetail.getDetails(movie.id.toInt())
-
         detailScrollView.smoothScrollTo(0,0)}
+
 
     private fun viewBind(data: MovieDetail){
 

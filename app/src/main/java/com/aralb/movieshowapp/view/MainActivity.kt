@@ -1,14 +1,13 @@
 package com.aralb.movieshowapp.view
 
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import com.aralb.movieshowapp.R
+import dagger.hilt.android.AndroidEntryPoint
 
 
+
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

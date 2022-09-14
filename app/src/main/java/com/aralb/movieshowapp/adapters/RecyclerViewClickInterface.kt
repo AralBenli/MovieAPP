@@ -1,4 +1,4 @@
-package com.aralb.movieshowapp
+package com.aralb.movieshowapp.adapters
 
 import com.aralb.movieshowapp.models.movieData.MovieResultItem
 
