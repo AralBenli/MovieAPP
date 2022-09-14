@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +27,8 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
     private lateinit var popularMovieAdapter: MovieAdapter
     private lateinit var upComingMovieAdapter: MovieAdapter
     private lateinit var topRatedAdapter: MovieAdapter
-    private lateinit var viewModelList: MainViewModel
+
+    private val viewModel by viewModels<MainViewModel>()
 
 
     override fun onCreateView(
@@ -35,9 +36,8 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
-        viewModelList = ViewModelProvider(this)[MainViewModel::class.java]
-        return view
+        return inflater.inflate(R.layout.fragment_main, container, false)
+
     }
     
 
@@ -50,7 +50,7 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
         }
 
         // POPULAR MOVIES
-        viewModelList.getPopular()
+        viewModel.getPopular()
 
         popularRecyclerView.layoutManager = LinearLayoutManager(
             requireContext(),
@@ -71,12 +71,12 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
             popularRecyclerView.adapter = popularMovieAdapter
         }
 
-        viewModelList.popularMovieModel.observe(requireActivity(), popularObserver)
+        viewModel.popularMovieModel.observe(requireActivity(), popularObserver)
 
 
         // UPCOMING MOVIES
 
-        viewModelList.getUpcoming()
+        viewModel.getUpcoming()
 
         upcomingRecyclerView.layoutManager = LinearLayoutManager(
             requireContext(),
@@ -97,11 +97,11 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
 
             upcomingRecyclerView.adapter = upComingMovieAdapter
         }
-        viewModelList.upcomingMovieModel.observe(requireActivity(), upcomingMovieObserver)
+        viewModel.upcomingMovieModel.observe(requireActivity(), upcomingMovieObserver)
 
 
         // TOP RATED MOVIES
-        viewModelList.getTopRated()
+        viewModel.getTopRated()
 
         topRatedRecyclerView.layoutManager = LinearLayoutManager(
             requireContext(),
@@ -121,7 +121,7 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
 
             topRatedRecyclerView.adapter = topRatedAdapter
         }
-        viewModelList.topRatedMovieModel.observe(requireActivity(), topRatedMovieObserver)
+        viewModel.topRatedMovieModel.observe(requireActivity(), topRatedMovieObserver)
 
 
     }

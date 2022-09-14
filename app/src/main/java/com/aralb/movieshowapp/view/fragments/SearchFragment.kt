@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aralb.movieshowapp.R
@@ -24,10 +24,12 @@ import kotlinx.android.synthetic.main.fragment_search.view.*
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() , RecyclerViewClickInterface {
+
     lateinit var searchAdapter: MovieAdapter
     lateinit var linearlayoutmanager: LinearLayoutManager
     lateinit var text: String
-    lateinit var searchViewModel: SearchViewModel
+
+    private val viewModel by viewModels<SearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,9 +37,8 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
     ): View? {
 
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_search, container, false)
-        searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
-        return view
+        return inflater.inflate(R.layout.fragment_search, container, false)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +55,7 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     text = query
-                    searchViewModel.getSearch(text)
+                    viewModel.getSearch(text)
                     return true
                 }
                 return false
@@ -71,7 +72,7 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
             )
             searchRecyclerView.adapter = searchAdapter
         }
-        searchViewModel.searchModel.observe(requireActivity(), searchObserver)
+        viewModel.searchModel.observe(requireActivity(), searchObserver)
 
     }
 
