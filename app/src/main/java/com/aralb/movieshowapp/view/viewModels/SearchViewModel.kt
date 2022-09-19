@@ -14,7 +14,6 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel(), SearchDataListener {
 
     val searchModel = MutableLiveData<MovieResponse>()
-    val searchLoadingError = MutableLiveData<String>()
 
     init {
         repository.listenerSearch = this

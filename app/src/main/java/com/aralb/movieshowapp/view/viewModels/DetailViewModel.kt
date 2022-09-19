@@ -16,10 +16,8 @@ class DetailViewModel
 ): ViewModel() , DetailDataListener {
 
     val detailModel = MutableLiveData<MovieDetail>()
-    val detailLoadingError = MutableLiveData<String>()
 
     val similarModel = MutableLiveData<MovieResponse>()
-    val similarLoadingError = MutableLiveData<String>()
 
 init {
     repository.listenerDetail = this

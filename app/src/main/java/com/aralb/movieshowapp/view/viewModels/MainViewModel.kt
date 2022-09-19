@@ -14,13 +14,10 @@ class MainViewModel @Inject constructor(
     ) :ViewModel() , MainDataListener {
 
     val popularMovieModel = MutableLiveData<MovieResponse>()
-    val popularMovieLoadingError = MutableLiveData<String>()
 
     val upcomingMovieModel = MutableLiveData<MovieResponse>()
-    val upcomingMovieLoadingError = MutableLiveData<String>()
 
     val topRatedMovieModel = MutableLiveData<MovieResponse>()
-    val topRatedMovieLoadingError = MutableLiveData<String>()
 
     init {
 

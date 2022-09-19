@@ -36,8 +36,12 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        return  inflater.inflate(R.layout.fragment_detail, container, false)
+        return inflater.inflate(R.layout.fragment_detail, container, false)
 
+    }
+
+    override fun getView(): View? {
+        return super.getView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
