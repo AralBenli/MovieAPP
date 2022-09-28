@@ -34,7 +34,7 @@ suspend fun getSimilar(
 
 @GET("3/search/movie")
 suspend fun getSearch(
-    @Query("api_key") api_key: String= Constants.api_key,
+    @Query("api_key") api_key: String = Constants.api_key,
     @Query("query")query : String? ):MovieResponse
 
 }

@@ -33,68 +33,71 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
 
     private val viewModel by viewModels<MainViewModel>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
+        //  Main to Search buttonOnClickListener
         view.listScopeImageView.setOnClickListener {
             findNavController().navigate(R.id.action_MainFragment_to_searchFragment)
         }
 
-
-        // POPULAR MOVIES
-
         popularRecyclerView.layoutManager = LinearLayoutManager(
             requireContext(),
             RecyclerView.HORIZONTAL,
-            false
-        )
-
+            false)
         popularRecyclerView.setHasFixedSize(true)
 
+        upcomingRecyclerView.layoutManager = LinearLayoutManager(
+            requireContext(),
+            RecyclerView.HORIZONTAL,
+            false)
+        upcomingRecyclerView.setHasFixedSize(true)
+
+        topRatedRecyclerView.layoutManager = LinearLayoutManager(
+            requireContext(),
+            RecyclerView.HORIZONTAL,
+            false)
+        topRatedRecyclerView.setHasFixedSize(true)
+
+        fetchMain()
+        collectMain()
+
+    }
+
+    override fun onItemClicked(movie: MovieResultItem) {
+        val bundle = Bundle()
+        bundle.putParcelable("movie", movie)
+        findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
+    }
+    private fun fetchMain() {
+        viewModel.getUpcoming()
+        viewModel.getTopRated()
         viewModel.getPopular()
+    }
+    private fun collectMain()  {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 launch {
                     viewModel.popularData.collectLatest { data ->
                         if (data != null) {
-
                             popularMovieAdapter = MovieAdapter(
                                 requireContext(),
                                 data.movies,
                                 this@MainFragment
                             )
-
                             popularRecyclerView.adapter = popularMovieAdapter
                         }
                     }
                 }
-
             }
         }
-
-
-        // UPCOMING MOVIES
-
-        upcomingRecyclerView.layoutManager = LinearLayoutManager(
-            requireContext(),
-            RecyclerView.HORIZONTAL,
-            false
-        )
-
-        upcomingRecyclerView.setHasFixedSize(true)
-
-        viewModel.getUpcoming()
-
         viewLifecycleOwner.lifecycleScope.launch {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -111,21 +114,9 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
                     }
                 }
 
+            }
+
         }
-
-}
-
-        // TOP RATED MOVIES
-
-        topRatedRecyclerView.layoutManager = LinearLayoutManager(
-            requireContext(),
-            RecyclerView.HORIZONTAL,
-            false
-        )
-        topRatedRecyclerView.setHasFixedSize(true)
-
-        viewModel.getTopRated()
-
         viewLifecycleOwner.lifecycleScope.launch {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -142,20 +133,17 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
                     }
                 }
 
-          }
+            }
+
+
         }
-
-
-}
-    override fun onItemClicked(movie: MovieResultItem) {
-
-        val bundle = Bundle()
-        bundle.putParcelable("movie", movie)
-
-        findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
 
     }
 }
+
+
+
+
 
 
 

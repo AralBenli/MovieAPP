@@ -40,44 +40,40 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
     ): View {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false)
-
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-
-
         movie = requireArguments().getParcelable("movie")!!
 
-
-        // MOVIE DETAILS
-
-        viewModel.getDetails(movie.id.toInt())
-
-        viewLifecycleOwner.lifecycleScope.launch{
-
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                launch {
-                    viewModel.detailData.collectLatest { data ->
-                        if (data != null){
-                            viewBind(data)
-                        }}
-                }
-            }
-        }
-
-
-        //SIMILAR MOVIES
         linearLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL , false)
         similarMovieRecyclerView.layoutManager= linearLayoutManager
         similarMovieRecyclerView.setHasFixedSize(true)
 
+        fetchDetail()
+        collectDetail()
 
+    }
+
+    private fun fetchDetail(){
+        viewModel.getDetails(movie.id.toInt())
         viewModel.getSimilar(movie.id.toInt())
+    }
+    private fun collectDetail() {
+        viewLifecycleOwner.lifecycleScope.launch{
 
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+
+                launch {
+
+                    viewModel.detailData.collectLatest { data ->
+                        if (data != null){
+                            viewBind(data)
+                        }
+                    }
+                }
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launch {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -95,16 +91,16 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
                     }
                 }
             }
-        }
-    }
 
+        }
+
+    }
 
     override fun onItemClicked(movie : MovieResultItem){
         viewModel.getDetails(movie.id.toInt())
         detailScrollView.smoothScrollTo(0,0)}
 
-
-    private fun viewBind(data: MovieDetail){
+    private fun viewBind(data: MovieDetail) {
 
     Picasso.get()
         .load(imageBase + data.poster_path)
@@ -120,7 +116,6 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
 
     viewModel.getSimilar(movie.id.toInt())
     }
-
 
 }
 

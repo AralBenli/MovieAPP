@@ -20,7 +20,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:showAsAction="ifRoom|collapseActionView"
-        app:submitBackground="@color/white" />
+        app:submitBackground="@color/white"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecyclerView"

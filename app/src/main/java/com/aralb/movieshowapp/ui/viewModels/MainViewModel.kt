@@ -30,7 +30,7 @@ class MainViewModel @Inject constructor(
 
     fun getPopular(){
         viewModelScope.launch {
-            repository.getPopular().collect{ values ->
+            repository.getPopular().collect { values ->
                 _popularData.value = values
             }
         }
@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    }
+}
 
 
 

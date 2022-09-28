@@ -53,22 +53,25 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
         view.searchView.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 return false
             }
-
             override fun onQueryTextChange(query: String?): Boolean {
-
                 if (query != null && query != "") {
                     text = query
-                    viewModel.getSearch(text)
-
+                    fetchSearch()
                     return true
                 }
                     return false
+                }
             }
-        })
+        )
+        collectSearch()
+    }
 
+    private fun fetchSearch(){
+        viewModel.getSearch(text)
+    }
+    private fun collectSearch() {
         viewLifecycleOwner.lifecycleScope.launch {
 
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -92,13 +95,13 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
             }
         }
     }
-            override fun onItemClicked(movie: MovieResultItem) {
+    override fun onItemClicked(movie: MovieResultItem) {
                 val bundle = Bundle()
                 bundle.putParcelable("movie", movie)
 
                 findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
             }
-        }
+}
 
 
 
