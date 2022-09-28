@@ -14,8 +14,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-
-
     @Singleton
     @Provides
     fun provideRetrofit() : Retrofit {
@@ -25,7 +23,6 @@ object AppModule {
         .baseUrl(Constants.BASE_URL)
         .build()
 }
-
     @Provides
     @Singleton
     fun provideMovieApi(retrofit : Retrofit): MovieService{

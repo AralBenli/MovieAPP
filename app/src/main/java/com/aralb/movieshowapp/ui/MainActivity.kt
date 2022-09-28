@@ -1,4 +1,4 @@
-package com.aralb.movieshowapp.view
+package com.aralb.movieshowapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

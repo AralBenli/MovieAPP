@@ -3,11 +3,11 @@ package com.aralb.movieshowapp.util
 object Constants {
 
 
-    val BASE_URL = "https://api.themoviedb.org"
+    const val BASE_URL = "https://api.themoviedb.org/"
 
-    val api_key = "649dc395f4c3b7765f91e1f3eb986dcf"
+    const val api_key = "649dc395f4c3b7765f91e1f3eb986dcf"
 
-    val imageBase = "https://image.tmdb.org/t/p/w500/"
+    const val imageBase = "https://image.tmdb.org/t/p/w500/"
 
 
 

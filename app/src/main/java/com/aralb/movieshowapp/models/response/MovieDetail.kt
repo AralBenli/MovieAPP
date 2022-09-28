@@ -1,4 +1,4 @@
-package com.aralb.movieshowapp.models.movieDetail
+package com.aralb.movieshowapp.models.response
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

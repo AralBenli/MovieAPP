@@ -6,7 +6,7 @@
     app:startDestination="@id/MainFragment">
     <fragment
         android:id="@+id/MainFragment"
-        android:name="com.aralb.movieshowapp.view.fragments.MainFragment"
+        android:name="com.aralb.movieshowapp.ui.fragments.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
         <action
@@ -20,12 +20,12 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.aralb.movieshowapp.view.fragments.DetailFragment"
+        android:name="com.aralb.movieshowapp.ui.fragments.DetailFragment"
         android:label="fragment_details"
         tools:layout="@layout/fragment_detail" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.aralb.movieshowapp.view.fragments.SearchFragment"
+        android:name="com.aralb.movieshowapp.ui.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action

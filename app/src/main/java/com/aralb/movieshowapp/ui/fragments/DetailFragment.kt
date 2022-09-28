@@ -1,4 +1,4 @@
-package com.aralb.movieshowapp.view.fragments
+package com.aralb.movieshowapp.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,21 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.MovieAdapter
 import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
-import com.aralb.movieshowapp.models.movieData.MovieResultItem
-import com.aralb.movieshowapp.models.movieDetail.MovieDetail
-import com.aralb.movieshowapp.models.response.MovieResponse
+import com.aralb.movieshowapp.models.response.MovieDetail
+import com.aralb.movieshowapp.models.response.MovieResultItem
+import com.aralb.movieshowapp.ui.viewModels.DetailViewModel
 import com.aralb.movieshowapp.util.Constants.imageBase
-import com.aralb.movieshowapp.view.viewModels.DetailViewModel
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_detail.view.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() , RecyclerViewClickInterface {
@@ -40,44 +43,61 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
 
     }
 
-    override fun getView(): View? {
-        return super.getView()
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 
+
+
+        movie = requireArguments().getParcelable("movie")!!
+
+
+        // MOVIE DETAILS
+
+        viewModel.getDetails(movie.id.toInt())
+
+        viewLifecycleOwner.lifecycleScope.launch{
+
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    viewModel.detailData.collectLatest { data ->
+                        if (data != null){
+                            viewBind(data)
+                        }}
+                }
+            }
+        }
+
+
+        //SIMILAR MOVIES
         linearLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL , false)
         similarMovieRecyclerView.layoutManager= linearLayoutManager
         similarMovieRecyclerView.setHasFixedSize(true)
 
-        movie = requireArguments().getParcelable("movie")!!
-        // MOVIE DETAILS
-
-        viewModel.getDetails(movie.id.toInt())
-        val detailObserver = Observer<MovieDetail>{ data ->
-            viewBind(data)
-        }
-        viewModel.detailModel.observe(requireActivity(),detailObserver)
-
-
-        //SIMILAR MOVIES
 
         viewModel.getSimilar(movie.id.toInt())
 
-        val similarObserver = Observer<MovieResponse>{ data ->
+        viewLifecycleOwner.lifecycleScope.launch {
 
-            similarMovieAdapter = MovieAdapter(
-                    requireContext(),
-                    data.movies,
-                    this@DetailFragment)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                launch {
+                    viewModel.similarData.collectLatest { data ->
+                        if (data != null) {
+                            similarMovieAdapter = MovieAdapter(
+                                requireContext(),
+                                data.movies,
+                                this@DetailFragment
+                            )
 
-            similarMovieRecyclerView.adapter = similarMovieAdapter
+                            similarMovieRecyclerView.adapter = similarMovieAdapter
+                        }
+                    }
+                }
+            }
         }
-
-        viewModel.similarModel.observe(requireActivity(),similarObserver)
     }
+
 
     override fun onItemClicked(movie : MovieResultItem){
         viewModel.getDetails(movie.id.toInt())
@@ -100,7 +120,14 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
 
     viewModel.getSimilar(movie.id.toInt())
     }
+
+
 }
+
+
+
+
+
 
 
 

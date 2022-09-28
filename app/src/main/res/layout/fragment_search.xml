@@ -7,21 +7,20 @@
     android:background="@color/black"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
-        android:background="@drawable/roundstyle"
-        android:backgroundTint="@color/white"
         android:layout_width="0dp"
-        android:queryHint="Search..."
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/roundstyle"
+        app:defaultQueryHint="Search..."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom|collapseActionView"
+        app:submitBackground="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRecyclerView"

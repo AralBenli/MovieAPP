@@ -10,16 +10,16 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
-import com.aralb.movieshowapp.models.movieData.MovieResultItem
+import com.aralb.movieshowapp.models.response.MovieResultItem
 import com.aralb.movieshowapp.util.Constants.imageBase
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_row_item.view.*
 
 class MovieAdapter(private val context: Context,
-                   private val movies: List<MovieResultItem>?,
+                   private val movies: List<MovieResultItem>,
                    private val recyclerViewClickInterface: RecyclerViewClickInterface
-)
-    :RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
+
+) :RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
 
     class MovieViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
 
@@ -42,7 +42,7 @@ class MovieAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie = movies!![position]
+        val movie : MovieResultItem = movies[position]
 
             holder.title.text= movie.title
             holder.release_date.text = movie.release_date
@@ -58,6 +58,6 @@ class MovieAdapter(private val context: Context,
         }
     }
     override fun getItemCount(): Int {
-        return movies!!.size
+        return movies.size
     }
 }
