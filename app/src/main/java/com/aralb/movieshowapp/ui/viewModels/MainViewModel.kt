@@ -13,11 +13,11 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val repository: MainRepository
-    ) :ViewModel() {
+) : ViewModel() {
 
-    private val popularResponse : MovieResponse? = null
-    private  val topRatedResponse : MovieResponse? = null
-    private val upcomingResponse : MovieResponse? = null
+    private val popularResponse: MovieResponse? = null
+    private val topRatedResponse: MovieResponse? = null
+    private val upcomingResponse: MovieResponse? = null
 
     private val _popularData = MutableStateFlow(popularResponse)
     val popularData = _popularData.asStateFlow()
@@ -28,23 +28,25 @@ class MainViewModel @Inject constructor(
     private val _topRatedData = MutableStateFlow(topRatedResponse)
     val topRatedData = _topRatedData.asStateFlow()
 
-    fun getPopular(){
+    fun getPopular() {
         viewModelScope.launch {
             repository.getPopular().collect { values ->
                 _popularData.value = values
             }
         }
     }
-    fun getTopRated(){
+
+    fun getTopRated() {
         viewModelScope.launch {
-            repository.getTopRated().collect{ values ->
+            repository.getTopRated().collect { values ->
                 _topRatedData.value = values
             }
         }
     }
-    fun getUpcoming(){
+
+    fun getUpcoming() {
         viewModelScope.launch {
-            repository.getUpcoming().collect{ values ->
+            repository.getUpcoming().collect { values ->
                 _upcomingData.value = values
             }
         }

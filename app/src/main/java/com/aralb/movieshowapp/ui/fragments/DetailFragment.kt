@@ -9,8 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.MovieAdapter
 import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
@@ -30,7 +28,6 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
 
     private lateinit var movie : MovieResultItem
     private lateinit var similarMovieAdapter: MovieAdapter
-    private lateinit var linearLayoutManager: LinearLayoutManager
 
     private val viewModel by viewModels<DetailViewModel>()
 
@@ -46,13 +43,8 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
         super.onViewCreated(view, savedInstanceState)
         movie = requireArguments().getParcelable("movie")!!
 
-        linearLayoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL , false)
-        similarMovieRecyclerView.layoutManager= linearLayoutManager
-        similarMovieRecyclerView.setHasFixedSize(true)
-
         fetchDetail()
         collectDetail()
-
     }
 
     private fun fetchDetail(){

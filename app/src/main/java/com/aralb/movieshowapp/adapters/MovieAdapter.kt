@@ -15,48 +15,51 @@ import com.aralb.movieshowapp.util.Constants.imageBase
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_row_item.view.*
 
-class MovieAdapter(private val context: Context,
-                   private val movies: List<MovieResultItem>,
-                   private val recyclerViewClickInterface: RecyclerViewClickInterface
+class MovieAdapter(
+    private val context: Context,
+    private val movies: List<MovieResultItem>,
+    private val recyclerViewClickInterface: RecyclerViewClickInterface
+) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
-) :RecyclerView.Adapter<MovieAdapter.MovieViewHolder>(){
+    class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    class MovieViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
-
-        var poster_path : ImageView
+        var posterPath: ImageView
         var title: TextView
-        var release_date : TextView
-        var vote_average : RatingBar
-        private val movie_root: ConstraintLayout
+        var releaseDate: TextView
+        var voteAverage: RatingBar
+        private val movieRoot: ConstraintLayout
+
         init {
-            poster_path = itemView.movieImageView
+            posterPath = itemView.movieImageView
             title = itemView.titleTextView
-            release_date = itemView.releaseDateTextView
-            vote_average = itemView.latestVoteAverage
-            movie_root = itemView.movie_root
-        } }
+            releaseDate = itemView.releaseDateTextView
+            voteAverage = itemView.latestVoteAverage
+            movieRoot = itemView.movie_root
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        val itemView = LayoutInflater.from(context).inflate(R.layout.movie_row_item,parent,false)
+        val itemView = LayoutInflater.from(context).inflate(R.layout.movie_row_item, parent, false)
         return MovieViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        val movie : MovieResultItem = movies[position]
+        val movie: MovieResultItem = movies[position]
 
-            holder.title.text= movie.title
-            holder.release_date.text = movie.release_date
-            holder.vote_average.rating = (movie.vote_average.toFloat())/2
+        holder.title.text = movie.title
+        holder.releaseDate.text = movie.release_date
+        holder.voteAverage.rating = (movie.vote_average.toFloat()) / 2
 
         Picasso.get()
-                .load(imageBase + movie.poster_path)
-                .into(holder.poster_path)
+            .load(imageBase + movie.poster_path)
+            .into(holder.posterPath)
 
 
         holder.itemView.movie_root.setOnClickListener {
             recyclerViewClickInterface.onItemClicked(movie)
         }
     }
+
     override fun getItemCount(): Int {
         return movies.size
     }

@@ -15,18 +15,18 @@ class SearchViewModel @Inject constructor(
     private val repository: SearchRepository,
 ) : ViewModel() {
 
-    private val searchResponse : MovieResponse? = null
+    private val searchResponse: MovieResponse? = null
 
 
     private val _searchData = MutableStateFlow(searchResponse)
     val searchData = _searchData.asStateFlow()
 
-    fun getSearch(text:String){
+    fun getSearch(text: String) {
         viewModelScope.launch {
-                repository.getSearch(text).collect { values ->
-                    _searchData.value = values
+            repository.getSearch(text).collect { values ->
+                _searchData.value = values
             }
-         }
+        }
     }
 }
 

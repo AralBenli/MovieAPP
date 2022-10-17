@@ -10,8 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.MovieAdapter
 import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
@@ -25,7 +23,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class MainFragment : Fragment() , RecyclerViewClickInterface {
+class MainFragment : Fragment(), RecyclerViewClickInterface {
 
     private lateinit var popularMovieAdapter: MovieAdapter
     private lateinit var upComingMovieAdapter: MovieAdapter
@@ -39,7 +37,7 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
     ): View? {
         return inflater.inflate(R.layout.fragment_main, container, false)
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,27 +46,8 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
             findNavController().navigate(R.id.action_MainFragment_to_searchFragment)
         }
 
-        popularRecyclerView.layoutManager = LinearLayoutManager(
-            requireContext(),
-            RecyclerView.HORIZONTAL,
-            false)
-        popularRecyclerView.setHasFixedSize(true)
-
-        upcomingRecyclerView.layoutManager = LinearLayoutManager(
-            requireContext(),
-            RecyclerView.HORIZONTAL,
-            false)
-        upcomingRecyclerView.setHasFixedSize(true)
-
-        topRatedRecyclerView.layoutManager = LinearLayoutManager(
-            requireContext(),
-            RecyclerView.HORIZONTAL,
-            false)
-        topRatedRecyclerView.setHasFixedSize(true)
-
         fetchMain()
         collectMain()
-
     }
 
     override fun onItemClicked(movie: MovieResultItem) {
@@ -76,14 +55,16 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
         bundle.putParcelable("movie", movie)
         findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
     }
+
     private fun fetchMain() {
         viewModel.getUpcoming()
         viewModel.getTopRated()
         viewModel.getPopular()
     }
-    private fun collectMain()  {
+
+    private fun collectMain() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.popularData.collectLatest { data ->
                         if (data != null) {
@@ -100,7 +81,7 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
         }
         viewLifecycleOwner.lifecycleScope.launch {
 
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.upcomingData.collectLatest { data ->
                         if (data != null) {
@@ -119,10 +100,10 @@ class MainFragment : Fragment() , RecyclerViewClickInterface {
         }
         viewLifecycleOwner.lifecycleScope.launch {
 
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.topRatedData.collectLatest { data ->
-                        if (data != null){
+                        if (data != null) {
                             topRatedAdapter = MovieAdapter(
                                 requireContext(),
                                 data.movies,

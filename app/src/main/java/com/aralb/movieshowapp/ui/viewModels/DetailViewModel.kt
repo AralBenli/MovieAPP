@@ -13,32 +13,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel
-@Inject constructor (
-    private var  repository : DetailRepository,
-): ViewModel() {
-    private val detailResponse  : MovieDetail? = null
-    private val similarResponse : MovieResponse? = null
+@Inject constructor(
+    private var repository: DetailRepository,
+) : ViewModel() {
+    private val detailResponse: MovieDetail? = null
+    private val similarResponse: MovieResponse? = null
 
-    private val _detailData  = MutableStateFlow(detailResponse)
+    private val _detailData = MutableStateFlow(detailResponse)
     val detailData = _detailData.asStateFlow()
 
     private val _similarData = MutableStateFlow(similarResponse)
     val similarData = _similarData.asStateFlow()
 
 
-    fun getDetails(id:Int){
-    viewModelScope.launch {
-        repository.getDetails(id).collect { values ->
-            _detailData.value = values
+    fun getDetails(id: Int) {
+        viewModelScope.launch {
+            repository.getDetails(id).collect {
+                _detailData.value = it
+
+            }
 
         }
-
     }
-}
-    fun getSimilar(id:Int){
+
+    fun getSimilar(id: Int) {
         viewModelScope.launch {
-            repository.getSimilar(id).collect { values ->
-                _similarData.value = values
+            repository.getSimilar(id).collect {
+                _similarData.value = it
             }
         }
     }

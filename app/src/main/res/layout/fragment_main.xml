@@ -64,6 +64,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/popularRecyclerView"
                 android:layout_width="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -79,6 +81,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topRatedRecyclerView"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>
@@ -95,6 +99,8 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/upcomingRecyclerView"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </androidx.recyclerview.widget.RecyclerView>

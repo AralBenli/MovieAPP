@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() , RecyclerViewClickInterface {
+class SearchFragment : Fragment(), RecyclerViewClickInterface {
 
     private lateinit var searchAdapter: MovieAdapter
     private lateinit var linearlayoutmanager: LinearLayoutManager
@@ -45,9 +45,6 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        linearlayoutmanager = LinearLayoutManager(requireContext())
-        searchRecyclerView.layoutManager = linearlayoutmanager
-        searchRecyclerView.setHasFixedSize(true)
         searchView.setBackgroundColor(Color.WHITE)
 
         view.searchView.setOnQueryTextListener(object :
@@ -55,22 +52,24 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
+
             override fun onQueryTextChange(query: String?): Boolean {
-                if (query != null && query != "") {
+                if (!query.isNullOrEmpty()) {
                     text = query
                     fetchSearch()
                     return true
                 }
-                    return false
-                }
+                return false
             }
+        }
         )
         collectSearch()
     }
 
-    private fun fetchSearch(){
+    private fun fetchSearch() {
         viewModel.getSearch(text)
     }
+
     private fun collectSearch() {
         viewLifecycleOwner.lifecycleScope.launch {
 
@@ -95,12 +94,13 @@ class SearchFragment : Fragment() , RecyclerViewClickInterface {
             }
         }
     }
-    override fun onItemClicked(movie: MovieResultItem) {
-                val bundle = Bundle()
-                bundle.putParcelable("movie", movie)
 
-                findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
-            }
+    override fun onItemClicked(movie: MovieResultItem) {
+        val bundle = Bundle()
+        bundle.putParcelable("movie", movie)
+
+        findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
+    }
 }
 
 
