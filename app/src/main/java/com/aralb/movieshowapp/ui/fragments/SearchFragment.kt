@@ -11,24 +11,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.MovieAdapter
-import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
-import com.aralb.movieshowapp.models.response.MovieResultItem
+import com.aralb.movieshowapp.databinding.FragmentSearchBinding
+import com.aralb.movieshowapp.ui.MainActivity
 import com.aralb.movieshowapp.ui.viewModels.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class SearchFragment : Fragment(), RecyclerViewClickInterface {
+class SearchFragment : Fragment() {
 
-    private lateinit var searchAdapter: MovieAdapter
-    private lateinit var linearlayoutmanager: LinearLayoutManager
+    private val searchAdapter = MovieAdapter()
     lateinit var text: String
+    lateinit var binding: FragmentSearchBinding
 
     private val viewModel by viewModels<SearchViewModel>()
 
@@ -37,17 +34,18 @@ class SearchFragment : Fragment(), RecyclerViewClickInterface {
         savedInstanceState: Bundle?
     ): View? {
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
-
+        binding = FragmentSearchBinding.inflate(layoutInflater)
+        (requireActivity() as MainActivity).backNavigation(true)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+        navigation()
+        binding.searchView.setBackgroundColor(Color.WHITE)
 
-        searchView.setBackgroundColor(Color.WHITE)
-
-        view.searchView.setOnQueryTextListener(object :
+        binding.searchView.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
@@ -72,34 +70,25 @@ class SearchFragment : Fragment(), RecyclerViewClickInterface {
 
     private fun collectSearch() {
         viewLifecycleOwner.lifecycleScope.launch {
-
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-
                 launch {
-
                     viewModel.searchData.collect { data ->
                         if (data != null) {
-                            searchAdapter = MovieAdapter(
-                                requireContext(),
-                                data.movies,
-                                this@SearchFragment
-                            )
-
-                            searchRecyclerView.adapter = searchAdapter
+                            binding.searchRecyclerView.adapter = searchAdapter
+                            searchAdapter.addMovieList(data.movies)
                         }
-
                     }
-
                 }
             }
         }
     }
 
-    override fun onItemClicked(movie: MovieResultItem) {
-        val bundle = Bundle()
-        bundle.putParcelable("movie", movie)
-
-        findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
+    private fun navigation() {
+        searchAdapter.clickMovie = {
+            val bundle = Bundle()
+            bundle.putInt("movieId", it.id.toInt())
+            findNavController().navigate(R.id.action_searchFragment_to_detailsFragment, bundle)
+        }
     }
 }
 

@@ -11,53 +11,55 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.MovieAdapter
-import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
+import com.aralb.movieshowapp.databinding.FragmentDetailBinding
 import com.aralb.movieshowapp.models.response.MovieDetail
-import com.aralb.movieshowapp.models.response.MovieResultItem
+import com.aralb.movieshowapp.ui.MainActivity
 import com.aralb.movieshowapp.ui.viewModels.DetailViewModel
 import com.aralb.movieshowapp.util.Constants.imageBase
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_detail.*
-import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
-class DetailFragment : Fragment() , RecyclerViewClickInterface {
+class DetailFragment : Fragment() {
 
-    private lateinit var movie : MovieResultItem
-    private lateinit var similarMovieAdapter: MovieAdapter
-
+    lateinit var binding : FragmentDetailBinding
+    private var similarMovieAdapter = MovieAdapter()
     private val viewModel by viewModels<DetailViewModel>()
+    private var getId by Delegates.notNull<Int>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        binding = FragmentDetailBinding.inflate(layoutInflater)
+        (requireActivity() as MainActivity).backNavigation(true)
+
+        return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        movie = requireArguments().getParcelable("movie")!!
 
+        getId = requireArguments().getInt("movieId")
+        navigation()
         fetchDetail()
         collectDetail()
     }
 
     private fun fetchDetail(){
-        viewModel.getDetails(movie.id.toInt())
-        viewModel.getSimilar(movie.id.toInt())
+        viewModel.getDetails(getId)
+        viewModel.getSimilar(getId)
     }
     private fun collectDetail() {
         viewLifecycleOwner.lifecycleScope.launch{
-
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-
                 launch {
-
                     viewModel.detailData.collectLatest { data ->
                         if (data != null){
                             viewBind(data)
@@ -72,43 +74,41 @@ class DetailFragment : Fragment() , RecyclerViewClickInterface {
                 launch {
                     viewModel.similarData.collectLatest { data ->
                         if (data != null) {
-                            similarMovieAdapter = MovieAdapter(
-                                requireContext(),
-                                data.movies,
-                                this@DetailFragment
-                            )
-
-                            similarMovieRecyclerView.adapter = similarMovieAdapter
+                            binding.similarMovieRecyclerView.adapter = similarMovieAdapter
+                            similarMovieAdapter.addMovieList(data.movies)
                         }
                     }
                 }
             }
-
         }
-
     }
-
-    override fun onItemClicked(movie : MovieResultItem){
-        viewModel.getDetails(movie.id.toInt())
-        detailScrollView.smoothScrollTo(0,0)}
-
     private fun viewBind(data: MovieDetail) {
-
-    Picasso.get()
-        .load(imageBase + data.poster_path)
-        .into(detailImageView)
-
-    view?.detailOverview?.text = data.overview
-    view?.detailTitleTextView?.text=data.title
-    view?.detailBudgetTextView?.text= data.budget.toString()
-    view?.detailOriginalLanguage?.text=data.original_language
-    view?.detailOriginalTitle?.text = data.original_title
-    view?.detailPopularity?.text = data.popularity.toString()
-    view?.detailRatingbar?.rating=(data.vote_average.toFloat())/2
-
-    viewModel.getSimilar(movie.id.toInt())
+        with(binding) {
+            if (!data.poster_path.isNullOrEmpty()) {
+                Glide.with(binding.root)
+                    .load(imageBase + data.poster_path)
+                    .apply(RequestOptions().override(1080, 720))
+                    .into(detailImageView)
+            }else{
+                detailImageView.setImageResource(R.drawable.default_poster_path)
+            }
+            detailOverview.text = data.overview
+            detailTitleTextView.text = data.title
+            detailBudgetTextView.text = data.budget.toString()
+            detailOriginalLanguage.text = data.original_language
+            detailOriginalTitle.text = data.original_title
+            detailPopularity.text = data.popularity.toString()
+            detailRatingbar.rating = (data.vote_average.toFloat()) / 2
+            viewModel.getSimilar(getId)
+        }
     }
 
+    private fun navigation(){
+        similarMovieAdapter.clickMovie = {
+            viewModel.getDetails(it.id.toInt())
+            binding.detailScrollView.smoothScrollTo(0,0)
+        }
+    }
 }
 
 

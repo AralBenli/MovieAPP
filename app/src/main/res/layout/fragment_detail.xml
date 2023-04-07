@@ -22,6 +22,7 @@
         <LinearLayout
             android:id="@+id/detailLinearLayout"
             android:layout_width="match_parent"
+            android:padding="15dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -36,13 +37,18 @@
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/detailImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                app:layout_constraintDimensionRatio="H,3:2" />
+                android:layout_width="240dp"
+                android:layout_height="350dp"
+                android:padding="10dp"
+                tools:src="@drawable/default_poster_path"
+                style="@style/roundedCorners2x"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearanceOverlay="@style/roundedCorners2x"
+                app:strokeWidth="5dp" />
+
 
             <TextView
                 android:id="@+id/detailOverview"

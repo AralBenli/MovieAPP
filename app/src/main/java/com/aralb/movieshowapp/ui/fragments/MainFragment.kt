@@ -12,22 +12,22 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.aralb.movieshowapp.R
 import com.aralb.movieshowapp.adapters.MovieAdapter
-import com.aralb.movieshowapp.adapters.RecyclerViewClickInterface
-import com.aralb.movieshowapp.models.response.MovieResultItem
+import com.aralb.movieshowapp.databinding.FragmentMainBinding
+import com.aralb.movieshowapp.ui.MainActivity
 import com.aralb.movieshowapp.ui.viewModels.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class MainFragment : Fragment(), RecyclerViewClickInterface {
+class MainFragment : Fragment(){
 
-    private lateinit var popularMovieAdapter: MovieAdapter
-    private lateinit var upComingMovieAdapter: MovieAdapter
-    private lateinit var topRatedAdapter: MovieAdapter
+    lateinit var binding : FragmentMainBinding
+    private val popularMovieAdapter = MovieAdapter()
+    private val upComingMovieAdapter = MovieAdapter()
+    private val topRatedAdapter = MovieAdapter()
+
 
     private val viewModel by viewModels<MainViewModel>()
 
@@ -35,25 +35,23 @@ class MainFragment : Fragment(), RecyclerViewClickInterface {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        binding = FragmentMainBinding.inflate(layoutInflater)
+        (requireActivity() as MainActivity).backNavigation(false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //  Main to Search buttonOnClickListener
-        view.listScopeImageView.setOnClickListener {
-            findNavController().navigate(R.id.action_MainFragment_to_searchFragment)
-        }
 
+
+        binding.topRatedRecyclerView.adapter = topRatedAdapter
+        binding.upcomingRecyclerView.adapter = upComingMovieAdapter
+        binding.popularRecyclerView.adapter = popularMovieAdapter
+
+        navigation()
         fetchMain()
         collectMain()
-    }
-
-    override fun onItemClicked(movie: MovieResultItem) {
-        val bundle = Bundle()
-        bundle.putParcelable("movie", movie)
-        findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
     }
 
     private fun fetchMain() {
@@ -68,12 +66,7 @@ class MainFragment : Fragment(), RecyclerViewClickInterface {
                 launch {
                     viewModel.popularData.collectLatest { data ->
                         if (data != null) {
-                            popularMovieAdapter = MovieAdapter(
-                                requireContext(),
-                                data.movies,
-                                this@MainFragment
-                            )
-                            popularRecyclerView.adapter = popularMovieAdapter
+                            popularMovieAdapter.addMovieList(data.movies)
                         }
                     }
                 }
@@ -85,18 +78,11 @@ class MainFragment : Fragment(), RecyclerViewClickInterface {
                 launch {
                     viewModel.upcomingData.collectLatest { data ->
                         if (data != null) {
-                            upComingMovieAdapter = MovieAdapter(
-                                requireContext(),
-                                data.movies,
-                                this@MainFragment
-                            )
-                            upcomingRecyclerView.adapter = upComingMovieAdapter
+                            upComingMovieAdapter.addMovieList(data.movies)
                         }
                     }
                 }
-
             }
-
         }
         viewLifecycleOwner.lifecycleScope.launch {
 
@@ -104,21 +90,30 @@ class MainFragment : Fragment(), RecyclerViewClickInterface {
                 launch {
                     viewModel.topRatedData.collectLatest { data ->
                         if (data != null) {
-                            topRatedAdapter = MovieAdapter(
-                                requireContext(),
-                                data.movies,
-                                this@MainFragment
-                            )
-                            topRatedRecyclerView.adapter = topRatedAdapter
+                            topRatedAdapter.addMovieList(data.movies)
                         }
                     }
                 }
-
             }
-
-
         }
+    }
 
+    private fun navigation() {
+        topRatedAdapter.clickMovie = {
+            val bundle = Bundle()
+            bundle.putInt("movieId" , it.id.toInt())
+            findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
+        }
+        popularMovieAdapter.clickMovie = {
+            val bundle = Bundle()
+            bundle.putInt("movieId" , it.id.toInt())
+            findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
+        }
+        upComingMovieAdapter.clickMovie = {
+            val bundle = Bundle()
+            bundle.putInt("movieId" , it.id.toInt())
+            findNavController().navigate(R.id.action_MainFragment_to_detailsFragment, bundle)
+        }
     }
 }
 
