@@ -36,6 +36,7 @@ class SearchFragment : Fragment() {
 
         binding = FragmentSearchBinding.inflate(layoutInflater)
         (requireActivity() as MainActivity).backNavigation(true)
+        (requireActivity() as MainActivity).search(false)
         return binding.root
     }
 

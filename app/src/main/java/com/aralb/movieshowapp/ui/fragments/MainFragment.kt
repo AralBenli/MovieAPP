@@ -37,6 +37,8 @@ class MainFragment : Fragment(){
     ): View? {
         binding = FragmentMainBinding.inflate(layoutInflater)
         (requireActivity() as MainActivity).backNavigation(false)
+        (requireActivity() as MainActivity).search(true)
+
         return binding.root
     }
 

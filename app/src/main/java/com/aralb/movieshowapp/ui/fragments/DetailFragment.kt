@@ -38,6 +38,8 @@ class DetailFragment : Fragment() {
     ): View {
         binding = FragmentDetailBinding.inflate(layoutInflater)
         (requireActivity() as MainActivity).backNavigation(true)
+        (requireActivity() as MainActivity).search(false)
+
 
         return binding.root
 

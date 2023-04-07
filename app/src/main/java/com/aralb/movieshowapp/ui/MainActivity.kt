@@ -54,6 +54,14 @@ class MainActivity : AppCompatActivity() {
             binding.backIcon.visibility = View.INVISIBLE
         }
     }
+
+    fun search(visibility: Boolean) {
+        if (visibility) {
+            binding.listScopeImageView.visibility = View.VISIBLE
+        } else {
+            binding.listScopeImageView.visibility = View.INVISIBLE
+        }
+    }
 }
 
 
